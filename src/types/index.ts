@@ -60,6 +60,11 @@ export interface SignOffData {
   approvedBy: string;
 }
 
+export interface EditAuditRecord {
+  editedBy: string;
+  editedAt: string;
+}
+
 export interface ProductionReport {
   id: string;
   reportNumber: string; // e.g. "R06-20261030-01"
@@ -79,8 +84,11 @@ export interface ProductionReport {
   sawCutter: SawCutterData;
   remarks: string;
   signOff: SignOffData;
-  submittedBy: string;
-  submittedAt: string;
+  submittedBy: string;   // User who initially submitted the report
+  submittedAt: string;   // Date & time of initial submission
+  lastEditedBy?: string; // User who last modified the report
+  lastEditedAt?: string; // Date & time of last modification
+  editHistory?: EditAuditRecord[]; // Complete audit history
   updatedAt: string;
 }
 

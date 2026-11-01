@@ -132,6 +132,19 @@
           "type": "string",
           "description": "Submission ISO timestamp"
         },
+        "lastEditedBy": {
+          "type": "string",
+          "description": "Username of the last user who edited the report",
+          "maxLength": 64
+        },
+        "lastEditedAt": {
+          "type": "string",
+          "description": "Timestamp of the last edit"
+        },
+        "editHistory": {
+          "type": "array",
+          "description": "Audit history array recording editor, timestamp, and notes"
+        },
         "updatedAt": {
           "type": "string",
           "description": "Last update ISO timestamp"

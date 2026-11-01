@@ -67,6 +67,7 @@ export const ReportTable: React.FC<ReportTableProps> = ({
         rep.product.toLowerCase().includes(term) ||
         (rep.size && rep.size.toLowerCase().includes(term)) ||
         (rep.submittedBy && rep.submittedBy.toLowerCase().includes(term)) ||
+        (rep.lastEditedBy && rep.lastEditedBy.toLowerCase().includes(term)) ||
         (rep.signOff?.preparedByName && rep.signOff.preparedByName.toLowerCase().includes(term)) ||
         rep.delays.some(
           (d) =>
@@ -105,16 +106,10 @@ export const ReportTable: React.FC<ReportTableProps> = ({
       <header className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800 rounded">
-              Doc R06
-            </span>
             <h1 className="text-xl font-bold tracking-tight text-slate-900">
               Master Production Report Records
             </h1>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Mill floor operations, shift output, delays tracking, and official PDF documents repository.
-          </p>
         </div>
 
         {/* User Session and Action Buttons */}
@@ -181,15 +176,16 @@ export const ReportTable: React.FC<ReportTableProps> = ({
       </header>
 
       {/* Industrial Key Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+     {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
+           <div className="flex items-center justify-between text-slate-500 mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider">Total Reports</span>
             <FileText className="w-4 h-4 text-blue-600" />
           </div>
           <div className="text-2xl font-bold font-mono text-slate-900">{metrics.totalReports}</div>
-          <div className="text-[11px] text-slate-500 mt-1">Archived logsheets in database</div>
+          <div className="text-[11px] text-slate-500 mt-1">Archived logsheets in database</div>  
         </div>
+      
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
           <div className="flex items-center justify-between text-slate-500 mb-1">
@@ -212,7 +208,7 @@ export const ReportTable: React.FC<ReportTableProps> = ({
           </div>
           <div className="text-[11px] text-slate-500 mt-1">Total raw material coils logged</div>
         </div>
-      </div>
+      </div>*/}
 
       {/* Search & Filter Toolbar */}
       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs mb-6 space-y-3">
@@ -292,8 +288,8 @@ export const ReportTable: React.FC<ReportTableProps> = ({
                 <th className="py-3 px-4">Shift</th>
                 <th className="py-3 px-4">Product & Size</th>
                 <th className="py-3 px-4">Operator</th>
-                <th className="py-3 px-4 text-center">Downtime</th>
-                <th className="py-3 px-4 text-center">Coils / Bundles</th>
+               {/* <th className="py-3 px-4 text-center">Downtime</th>*/}
+                <th className="py-3 px-4">Submitted / Edited By</th>
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -350,17 +346,30 @@ export const ReportTable: React.FC<ReportTableProps> = ({
                     </td>
 
                     {/* Downtime */}
-                    <td className="py-3 px-4 text-center font-mono">
+                    {/* <td className="py-3 px-4 text-center font-mono">
                       <span className={`font-semibold ${report.totalDowntimeMinutes > 0 ? 'text-rose-700' : 'text-slate-500'}`}>
                         {formatTotalDowntime(report.totalDowntimeMinutes)}
                       </span>
-                    </td>
+                    </td>*/}
 
-                    {/* Coils & Bundles */}
-                    <td className="py-3 px-4 text-center font-mono text-slate-700">
-                      <span>{totalCoils} coils</span>
-                      <span className="text-slate-400 mx-1">·</span>
-                      <span>{totalBundles} bndl</span>
+                    {/* Submitted / Edited Audit */}
+                    <td className="py-3 px-4 text-[11px] font-mono text-slate-600">
+                      <div className="flex items-center gap-1">
+                        <span className="text-slate-400 font-sans">By:</span>
+                        <span className="font-semibold text-slate-800">{report.submittedBy || 'Unknown'}</span>
+                        <span className="text-slate-400">
+                          {report.submittedAt ? `(${new Date(report.submittedAt).toLocaleDateString()})` : ''}
+                        </span>
+                      </div>
+                      {report.lastEditedBy && report.lastEditedAt && (
+                        <div className="flex items-center gap-1 text-[10.5px] text-blue-700 mt-0.5">
+                          <span className="text-slate-400 font-sans">Edit:</span>
+                          <span className="font-semibold">{report.lastEditedBy}</span>
+                          <span className="text-slate-400">
+                            ({new Date(report.lastEditedAt).toLocaleDateString()})
+                          </span>
+                        </div>
+                      )}
                     </td>
 
                     {/* Actions */}
@@ -406,7 +415,7 @@ export const ReportTable: React.FC<ReportTableProps> = ({
 
               {filteredReports.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-slate-500">
+                  <td colSpan={10} className="py-12 text-center text-slate-500">
                     <FileText className="w-8 h-8 text-slate-300 mx-auto mb-2" />
                     <p className="font-semibold text-slate-700 text-sm">No production reports found</p>
                     <p className="text-xs text-slate-400 mt-1">
@@ -436,7 +445,6 @@ export const ReportTable: React.FC<ReportTableProps> = ({
             Showing <strong className="text-slate-800">{filteredReports.length}</strong> of{' '}
             <strong className="text-slate-800">{reports.length}</strong> submitted reports
           </span>
-          <span className="font-mono text-[11px]">CamScanner R06 Standard</span>
         </div>
       </div>
     </div>

@@ -32,11 +32,12 @@ export const LoginScreen: React.FC = () => {
       <div className="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden border border-slate-200">
         {/* Header Banner */}
         <div className="bg-slate-950 px-6 py-6 text-white text-center border-b border-slate-800">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-blue-600/20 text-blue-400 mb-3 border border-blue-500/30">
+          {/*  <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-blue-600/20 text-blue-400 mb-3 border border-blue-500/30">
             <Factory className="w-6 h-6" />
-          </div>
-          <h1 className="text-xl font-bold tracking-tight text-white">Master Production Report</h1>
-          <p className="text-xs text-slate-400 font-mono mt-1 tracking-wider uppercase">System Document R06 · Mill Floor Access</p>
+          </div>*/}
+          <h1 className="text-xl font-bold tracking-tight text-white">Melwa Production Report</h1>
+         {/*   <p className="text-xs text-slate-400 font-mono mt-1 tracking-wider uppercase">System Document R06 · Mill Floor Access</p>
+        */}
         </div>
 
         {/* Login Form */}
@@ -96,7 +97,8 @@ export const LoginScreen: React.FC = () => {
           </button>
 
           {/* Quick Select Buttons */}
-          <div className="pt-3 border-t border-slate-100">
+        {/*   
+        <div className="pt-3 border-t border-slate-100">
             <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-2 font-medium">
               <KeyRound className="w-3.5 h-3.5 text-slate-400" />
               <span>Quick Login Accounts:</span>
@@ -128,16 +130,8 @@ export const LoginScreen: React.FC = () => {
               })}
             </div>
           </div>
+          */} 
         </form>
-
-        {/* Security Footer */}
-        <div className="px-6 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Role-Based Access Control</span>
-          </div>
-          <span className="font-mono text-[11px] text-slate-400">v1.0 (R06)</span>
-        </div>
       </div>
     </div>
   );

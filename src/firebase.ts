@@ -88,18 +88,31 @@ export async function fetchUsers(): Promise<UserProfile[]> {
   const cached = localStorage.getItem(STORAGE_KEYS.USERS);
   if (cached) {
     try {
-      return JSON.parse(cached);
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
     } catch {
       // ignore
     }
   }
-  // Initialize with initial users
-  localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(INITIAL_USERS));
+
+  // Fallback system accounts required by brief
+  const seedUsers = INITIAL_USERS.length > 0 ? INITIAL_USERS : [
+    { id: 'user-prod-1', username: 'PRODUCTION1', password: '1234', role: 'production', formAccess: 'write', createdAt: '2026-10-01T00:00:00Z' },
+    { id: 'user-prod-2', username: 'PRODUCTION2', password: '1234', role: 'production', formAccess: 'write', createdAt: '2026-10-01T00:00:00Z' },
+    { id: 'user-prod-3', username: 'PRODUCTION3', password: '1234', role: 'production', formAccess: 'write', createdAt: '2026-10-01T00:00:00Z' },
+    { id: 'user-prod-4', username: 'PRODUCTION4', password: '1234', role: 'production', formAccess: 'read', createdAt: '2026-10-01T00:00:00Z' },
+    { id: 'user-prod-5', username: 'PRODUCTION5', password: '1234', role: 'production', formAccess: 'write', createdAt: '2026-10-01T00:00:00Z' },
+    { id: 'user-super', username: 'SUPERUSER', password: '1234', role: 'super', formAccess: 'write', createdAt: '2026-10-01T00:00:00Z' },
+  ] as UserProfile[];
+
+  localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(seedUsers));
   // Background seed to Firestore
-  INITIAL_USERS.forEach((user) => {
+  seedUsers.forEach((user) => {
     setDoc(doc(db, 'users', user.id), user).catch(() => {});
   });
-  return INITIAL_USERS;
+  return seedUsers;
 }
 
 export async function saveUser(user: UserProfile): Promise<void> {

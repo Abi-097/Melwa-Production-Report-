@@ -3,7 +3,7 @@ import { ProductionReport } from '../types';
 import { formatTotalDowntime } from '../utils/timeCalculations';
 import { Download, Printer, ArrowLeft, CheckCircle2, Loader2 } from 'lucide-react';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 
 interface ReportPdfViewProps {
   report: ProductionReport;
@@ -168,7 +168,7 @@ export const ReportPdfView: React.FC<ReportPdfViewProps> = ({ report, onBack }) 
                   {/* Production Line */}
                   <div className="flex items-baseline">
                     <span className="font-semibold w-28 shrink-0">Production Line:</span>
-                    <div className="flex flex-wrap items-center gap-1 font-mono text-[11px]">
+                    <div className="flex flex-wrap items-center gap-1 font-mono text-[9px]">
                       {machineLines.map((line, idx) => {
                         const isSelected = report.productionLine === line;
                         return (
@@ -601,14 +601,11 @@ export const ReportPdfView: React.FC<ReportPdfViewProps> = ({ report, onBack }) 
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-slate-800">Prepared By: Shift In Charge</span>
-                  <span className="italic font-serif text-blue-900 text-xs px-2">
-                    {report.signOff?.shiftInChargeOption?.substring(0, 4) || 'Ragu'}
-                  </span>
                 </div>
                 <div className="flex items-baseline">
                   <span className="w-14 font-semibold text-slate-600">Name:</span>
                   <div className="flex flex-wrap items-center gap-1 font-mono text-[10.5px]">
-                    {['Raguwaran', 'Keshees Ram', 'Parasuram'].map((name, idx) => {
+                    {['Rajuthan', 'Keshees Ram', 'Parasuram'].map((name, idx) => {
                       const isSelected = (
                         report.signOff?.shiftInChargeOption ||
                         report.signOff?.preparedByName ||
@@ -631,22 +628,21 @@ export const ReportPdfView: React.FC<ReportPdfViewProps> = ({ report, onBack }) 
                     })}
                   </div>
                 </div>
-                <div className="flex items-center justify-between text-slate-600 text-[10px]">
+               {/* <div className="flex items-center justify-between text-slate-600 text-[10px]">
                   <span>Issue No: {report.signOff?.issueNo || '01'}</span>
                   <span>Reviewed by: {report.signOff?.reviewedBy || 'MD'}</span>
-                </div>
+                </div> */}
               </div>
 
               {/* Right Signoff: Checked By */}
               <div className="space-y-1 pl-4 border-l border-slate-300">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-slate-800">Checked By: Production Engineer</span>
-                  <span className="italic font-serif text-blue-900 text-xs px-2">Mayuran</span>
                 </div>
                 <div className="flex items-baseline">
                   <span className="w-14 font-semibold text-slate-600">Name:</span>
                   <span className="font-medium border-b border-dotted border-slate-700 flex-1 px-1">
-                    {report.signOff?.checkedByName || 'S Mayuran'}
+                    {report.signOff?.checkedByName || ' '}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-slate-600 text-[10px]">

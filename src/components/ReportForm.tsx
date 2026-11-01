@@ -107,33 +107,33 @@ export const ReportForm: React.FC<ReportFormProps> = ({
         fromTime: '08:00',
         toTime: '08:10',
         durationMinutes: 10,
-        department: 'Production',
-        explanation: 'Machine Starting',
+        department: '',
+        explanation: '',
       },
       {
         id: 'delay-2',
         fromTime: '10:00',
         toTime: '12:30',
         durationMinutes: 150,
-        department: 'Roll Change / Tooling',
-        explanation: 'Roll Change and alligement',
+        department: '',
+        explanation: '',
       },
       {
         id: 'delay-3',
         fromTime: '12:40',
         toTime: '12:50',
         durationMinutes: 10,
-        department: 'Production',
-        explanation: 'limit switch alarm',
+        department: '',
+        explanation: '',
       },
       {
         id: 'delay-4',
         fromTime: '05:50',
         toTime: '06:00',
         durationMinutes: 10,
-        department: 'Production',
-        explanation: 'Scarp Packing',
-        remark: 'End of shift clearance',
+        department: '',
+        explanation: '',
+        remark: '',
       },
     ]
   );
@@ -155,11 +155,11 @@ export const ReportForm: React.FC<ReportFormProps> = ({
   // Footer: Sign Off
   const [signOff, setSignOff] = useState<SignOffData>(
     initialReport?.signOff || {
-      preparedByName: 'Raguwaran',
-      shiftInChargeOption: 'Raguwaran',
+      preparedByName: 'Rajuthan',
+      shiftInChargeOption: 'Rajuthan',
       issueNo: '01',
       reviewedBy: 'MD',
-      checkedByName: 'S Mayuran',
+      checkedByName: '',
       dateOfIssue: '2016-10-14',
       approvedBy: 'GM',
     }
@@ -176,7 +176,7 @@ export const ReportForm: React.FC<ReportFormProps> = ({
   const productOptions: ProductType[] = ['Pipe', 'Bar'];
   const bladeTypeOptions: BladeType[] = ['HSS', 'TCT'];
   const bladeCodeOptions: BladeCode[] = ['PT4', 'PT5', 'PT6', 'PT7'];
-  const shiftInChargeOptions = ['Raguwaran', 'Keshees Ram', 'Parasuram'];
+  const shiftInChargeOptions = ['Rajuthan', 'Keshees Ram', 'Parasuram'];
 
   // Automatically calculate shift duration whenever operational time changes
   const handleOperationalTimeChange = (val: string) => {
@@ -298,6 +298,22 @@ export const ReportForm: React.FC<ReportFormProps> = ({
       initialReport?.reportNumber ||
       `R06-${date.replace(/-/g, '')}-${productionLine}`;
 
+    const nowIso = new Date().toISOString();
+    const activeUsername = currentUser?.username || 'ANONYMOUS';
+
+    const isExisting = Boolean(initialReport && initialReport.submittedBy);
+    const submittedBy = isExisting ? initialReport!.submittedBy : activeUsername;
+    const submittedAt = isExisting ? initialReport!.submittedAt : nowIso;
+
+    // Track who edited and the modification date
+    const lastEditedBy = activeUsername;
+    const lastEditedAt = nowIso;
+
+    const previousHistory = initialReport?.editHistory || [];
+    const editHistory = isExisting
+      ? [...previousHistory, { editedBy: activeUsername, editedAt: nowIso }]
+      : [{ editedBy: activeUsername, editedAt: nowIso }];
+
     return {
       id: initialReport?.id || `report-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       reportNumber,
@@ -317,9 +333,12 @@ export const ReportForm: React.FC<ReportFormProps> = ({
       sawCutter,
       remarks,
       signOff,
-      submittedBy: initialReport?.submittedBy || currentUser?.username || 'ANONYMOUS',
-      submittedAt: initialReport?.submittedAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      submittedBy,
+      submittedAt,
+      lastEditedBy,
+      lastEditedAt,
+      editHistory,
+      updatedAt: nowIso,
     };
   };
 
@@ -390,7 +409,7 @@ export const ReportForm: React.FC<ReportFormProps> = ({
             className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-colors shadow-2xs cursor-pointer"
           >
             <Eye className="w-3.5 h-3.5 text-blue-600" />
-            <span>Paper Replica / PDF Preview</span>
+            <span>PDF Preview</span>
           </button>
 
           {canWrite && (
@@ -412,6 +431,31 @@ export const ReportForm: React.FC<ReportFormProps> = ({
           )}
         </div>
       </div>
+
+      {/* Audit tracking banner */}
+      {initialReport && (
+        <div className="mb-4 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600 font-mono">
+          <div className="flex items-center gap-1.5">
+            <span className="text-slate-400">Created / Submitted by:</span>
+            <span className="font-bold text-slate-800">{initialReport.submittedBy || 'Unknown'}</span>
+            <span className="text-slate-400 text-[11px]">
+              ({new Date(initialReport.submittedAt).toLocaleDateString()}{' '}
+              {new Date(initialReport.submittedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})
+            </span>
+          </div>
+
+          {initialReport.lastEditedBy && (
+            <div className="flex items-center gap-1.5">
+              <span className="text-slate-400">Last edited by:</span>
+              <span className="font-bold text-blue-800">{initialReport.lastEditedBy}</span>
+              <span className="text-slate-400 text-[11px]">
+                ({new Date(initialReport.lastEditedAt || initialReport.updatedAt).toLocaleDateString()}{' '}
+                {new Date(initialReport.lastEditedAt || initialReport.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})
+              </span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Permission alert for Read-only users */}
       {!canWrite && (
@@ -452,8 +496,7 @@ export const ReportForm: React.FC<ReportFormProps> = ({
       <form onSubmit={handleSubmit} className="bg-white border-2 border-slate-800 rounded-xl shadow-md overflow-hidden p-4 sm:p-6 text-slate-900">
         {/* Form Document Header */}
         <div className="text-center pb-3 border-b-2 border-slate-800 mb-4">
-          <h1 className="text-base sm:text-xl font-extrabold uppercase tracking-wide text-slate-900 flex items-center justify-center gap-2">
-            <FileSpreadsheet className="w-5 h-5 text-blue-700 no-print" />
+          <h1 className="text-base sm:text-xl font-bold uppercase tracking-wide text-slate-900 flex items-center justify-center gap-2">
             <span>Master Production Report R06</span>
           </h1>
           <p className="text-[11px] text-slate-500 font-mono mt-0.5">Industrial Quality & Operational Logsheet</p>
@@ -518,7 +561,7 @@ export const ReportForm: React.FC<ReportFormProps> = ({
                 value={operator}
                 onChange={(e) => setOperator(e.target.value)}
                 disabled={!canWrite}
-                placeholder="e.g. Agilandaswaran / Aakash"
+                placeholder="Name"
                 required
                 className="flex-1 px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
@@ -1230,11 +1273,11 @@ export const ReportForm: React.FC<ReportFormProps> = ({
             {/* 3 options for Shift In Charge with automatic underline */}
             <div>
               <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                Shift In Charge (Choose one to underline):
+                Shift In Charge:
               </label>
               <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-white border border-slate-300 rounded-lg">
                 {shiftInChargeOptions.map((opt, idx) => {
-                  const isSelected = (signOff.shiftInChargeOption || 'Raguwaran') === opt;
+                  const isSelected = (signOff.shiftInChargeOption || 'Rajuthan') === opt;
                   return (
                     <React.Fragment key={opt}>
                       <button
