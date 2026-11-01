@@ -110,31 +110,6 @@ export const ReportForm: React.FC<ReportFormProps> = ({
         department: '',
         explanation: '',
       },
-      {
-        id: 'delay-2',
-        fromTime: '10:00',
-        toTime: '12:30',
-        durationMinutes: 150,
-        department: '',
-        explanation: '',
-      },
-      {
-        id: 'delay-3',
-        fromTime: '12:40',
-        toTime: '12:50',
-        durationMinutes: 10,
-        department: '',
-        explanation: '',
-      },
-      {
-        id: 'delay-4',
-        fromTime: '05:50',
-        toTime: '06:00',
-        durationMinutes: 10,
-        department: '',
-        explanation: '',
-        remark: '',
-      },
     ]
   );
 
@@ -142,14 +117,14 @@ export const ReportForm: React.FC<ReportFormProps> = ({
   const [sawCutter, setSawCutter] = useState<SawCutterData>(
     initialReport?.sawCutter || {
       bladeType: 'TCT',
-      bladeCode: 'PT5',
-      serialNumber: 'SN-9942B',
-      totalNoOfCuts: '1420',
-      totalWeightMt: '42.8',
+      bladeCode: '',
+      serialNumber: '',
+      totalNoOfCuts: '',
+      totalWeightMt: '',
     }
   );
   const [remarks, setRemarks] = useState<string>(
-    initialReport?.remarks || 'Roll change completed smoothly. Mill speed maintained above 37m/min throughout high-run period.'
+    initialReport?.remarks || ''
   );
 
   // Footer: Sign Off
@@ -1129,9 +1104,6 @@ export const ReportForm: React.FC<ReportFormProps> = ({
                   </td>
                   <td colSpan={canWrite ? 5 : 4} className="p-2 font-mono font-bold text-sm text-blue-900">
                     <span className="text-base">{formatTotalDowntime(totalDowntimeMinutes)}</span>
-                    <span className="text-xs text-slate-600 font-sans font-normal ml-3">
-                      ({totalDowntimeMinutes} total downtime minutes)
-                    </span>
                   </td>
                 </tr>
               </tfoot>

@@ -490,11 +490,6 @@ export const ReportPdfView: React.FC<ReportPdfViewProps> = ({ report, onBack }) 
                         className="border border-slate-800 p-1.5 font-bold font-mono text-sm text-blue-900 bg-slate-50"
                       >
                         {formatTotalDowntime(report.totalDowntimeMinutes)}
-                        {report.totalDowntimeMinutes > 0 && (
-                          <span className="text-xs text-slate-500 font-sans font-normal ml-2">
-                            ({report.totalDowntimeMinutes} minutes total)
-                          </span>
-                        )}
                       </td>
                     </tr>
                   </tfoot>
@@ -646,7 +641,7 @@ export const ReportPdfView: React.FC<ReportPdfViewProps> = ({ report, onBack }) 
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-slate-600 text-[10px]">
-                  <span>Date of Issue: {report.signOff?.dateOfIssue || report.date || '2016-10-14'}</span>
+                  <span>Date of Issue: {report.signOff?.dateOfIssue || report.date || ''}</span>
                   <span>Approved by: {report.signOff?.approvedBy || 'GM'}</span>
                 </div>
               </div>
