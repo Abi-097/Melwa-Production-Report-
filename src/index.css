@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1e293b;
+    background-color: #f1f5f9;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Industrial paper replica borders */
+  .paper-border {
+    border: 1.5px solid #1e293b;
+  }
+
+  .paper-border-b {
+    border-bottom: 1.5px solid #1e293b;
+  }
+
+  .paper-border-r {
+    border-right: 1.5px solid #1e293b;
+  }
+
+  .paper-grid td, .paper-grid th {
+    border: 1px solid #334155;
+  }
+}
+
+@media print {
+  body {
+    background-color: #ffffff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}

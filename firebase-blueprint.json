@@ -1,0 +1,182 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User credential, role, and form access permissions",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique user ID"
+        },
+        "username": {
+          "type": "string",
+          "description": "User login name e.g. PRODUCTION1, SUPERUSER",
+          "maxLength": 64
+        },
+        "passwordHash": {
+          "type": "string",
+          "description": "Authentication credential",
+          "maxLength": 128
+        },
+        "role": {
+          "type": "string",
+          "description": "User role e.g. super or production",
+          "enum": ["super", "production"]
+        },
+        "formAccess": {
+          "type": "string",
+          "description": "Form authorization level",
+          "enum": ["read", "write"]
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp ISO string"
+        }
+      },
+      "required": ["id", "username", "role", "formAccess"]
+    },
+    "ProductionReport": {
+      "title": "ProductionReport",
+      "description": "Master Production Report R06 daily submission record",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Document identifier"
+        },
+        "reportNumber": {
+          "type": "string",
+          "description": "Report serial code",
+          "maxLength": 64
+        },
+        "date": {
+          "type": "string",
+          "description": "Production date in YYYY-MM-DD format"
+        },
+        "productionLine": {
+          "type": "string",
+          "description": "Selected machine line",
+          "enum": ["T1", "T2", "T3", "T4", "T5", "C1", "C2", "PURLIN"]
+        },
+        "operator": {
+          "type": "string",
+          "description": "Operator names",
+          "maxLength": 200
+        },
+        "operationalTime": {
+          "type": "string",
+          "description": "Operational hours interval",
+          "maxLength": 100
+        },
+        "sizeDescription": {
+          "type": "string",
+          "description": "Product sizes produced",
+          "maxLength": 200
+        },
+        "shift": {
+          "type": "string",
+          "description": "Shift type",
+          "enum": ["Day", "Night"]
+        },
+        "avgMillSpeed": {
+          "type": "string",
+          "description": "Average mill speed with units",
+          "maxLength": 100
+        },
+        "shiftDuration": {
+          "type": "string",
+          "description": "Duration of the shift",
+          "maxLength": 100
+        },
+        "product": {
+          "type": "string",
+          "description": "Product type",
+          "enum": ["Pipe", "Bar"]
+        },
+        "productionColumns": {
+          "type": "array",
+          "description": "Production details columns per size"
+        },
+        "damageColumns": {
+          "type": "array",
+          "description": "Damage details columns per size"
+        },
+        "delays": {
+          "type": "array",
+          "description": "List of machine downtime delays with department and explanation"
+        },
+        "totalDowntimeMinutes": {
+          "type": "number",
+          "description": "Computed total downtime in minutes"
+        },
+        "sawCutter": {
+          "type": "object",
+          "description": "Saw cutting blade type, code, serial number, and cuts"
+        },
+        "remarks": {
+          "type": "string",
+          "description": "Remarks and suggestions",
+          "maxLength": 2000
+        },
+        "signOff": {
+          "type": "object",
+          "description": "Prepared By, Checked By, Reviewed By, Approved By metadata"
+        },
+        "submittedBy": {
+          "type": "string",
+          "description": "Username of submitting user",
+          "maxLength": 64
+        },
+        "submittedAt": {
+          "type": "string",
+          "description": "Submission ISO timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update ISO timestamp"
+        }
+      },
+      "required": ["id", "reportNumber", "date", "productionLine", "shift", "product"]
+    },
+    "MasterDepartment": {
+      "title": "MasterDepartment",
+      "description": "Master file department configuration with mapped delay explanations",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Department ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Department name",
+          "maxLength": 128
+        },
+        "explanations": {
+          "type": "array",
+          "description": "Array of reason explanation strings"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Update ISO timestamp"
+        }
+      },
+      "required": ["id", "name", "explanations"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles and access permissions"
+    },
+    "/reports/{reportId}": {
+      "schema": "ProductionReport",
+      "description": "Production reports repository"
+    },
+    "/departments/{deptId}": {
+      "schema": "MasterDepartment",
+      "description": "Master department and explanation taxonomies"
+    }
+  }
+}

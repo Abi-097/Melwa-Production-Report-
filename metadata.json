@@ -1,0 +1,6 @@
+{
+  "name": "Master Production Report R06",
+  "description": "Production filling form, multi-user access control, delays tracking, and replica PDF export system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
